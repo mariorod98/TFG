@@ -1,0 +1,14 @@
+{
+	"INI_JORNADA"	: 360,
+	"FIN_JORNADA" 	: 1440,
+	"PERIOCIDAD"	: 10,
+	"N_PARADAS"		: 10,
+	"T_IDA"			: [2, 2, 2, 2, 2, 3, 2, 1, 2],
+	"T_VUELTA"		: [2, 2, 2, 3, 3, 3, 2, 1, 1],
+	"T_FINAL_1"		: 10,
+	"T_FINAL_N"		: 13,
+	"P_SALIDA"		: 3,
+	"DIR_SALIDA"	: -1,
+	"P_CAMBIO"		: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+	"N_TRENES"		: [10]
+}
