@@ -1064,3 +1064,6 @@ venv/Lib/site-packages/__pycache__/easy_install.cpython-38.pyc
 .idea/misc.xml
 .idea/inspectionProfiles/Project_Default.xml
 .idea/inspectionProfiles/profiles_settings.xml
+venv/Scripts/f2py.exe
+venv/Lib/site-packages/openpyxl/xml/constants.py
+venv/Lib/site-packages/openpyxl/xml/__pycache__/functions.cpython-38.pyc
