@@ -76,11 +76,10 @@ def calcula_tramos():
 
 
 # función que calcula el horario de un tren en tramos realizados y la hora a la que llega a cada tramo
-def calcula_horario_tren(tramos, hora_ini, hora_fin, tren):
+def calcula_horario_tren(tramos, hora_ini, hora_fin, tren, direccion):
     paradas = glo.P_CAMBIO
     t_act = hora_ini
     t_fin = hora_fin
-    direccion = glo.DIR_SALIDA
 
     if 1 not in paradas:
         paradas = [1] + paradas
@@ -132,13 +131,19 @@ def calcula_horario_tren(tramos, hora_ini, hora_fin, tren):
     return horario
 
 
+# Función que calcula el horario de los trenes a partir de los datos de entrada
 def calcula_horario_trenes():
     tramos = calcula_tramos()
     horario = []
+    direccion = glo.DIR_SALIDA
+
     for i in range(0, glo.N_TRENES):
         hora_ini = glo.INI_JORNADA[i]
         hora_fin = glo.FIN_JORNADA[i]
-        horario = horario + calcula_horario_tren(tramos, hora_ini, hora_fin, i)
+        horario = horario + calcula_horario_tren(tramos, hora_ini, hora_fin, i, direccion)
+
+        if glo.DIR_ALTERNA:
+            direccion = direccion * -1
     return horario
 
 

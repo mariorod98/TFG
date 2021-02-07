@@ -15,6 +15,7 @@ T_FINAL_1 = 0           # tiempo de espera en la parada 1
 T_FINAL_N = 0           # tiempo de espera en la parada final N
 P_SALIDA = 0            # parada de salida de los trenes
 DIR_SALIDA = 0          # dirección de salida de los trenes
+DIR_ALTERNA = False     # especifica si los trenes alternan la dirección al salir o salen de la misma dirección
 P_CAMBIO = []           # paradas habilitadas para el cambio entre conductores
 N_SERVICIOS = 0         # número de servicios de la jornada
 T_MIN_DESCANSOS = 0     # tiempo mínimo entre dos periodos para que se considere un descanso
@@ -33,6 +34,7 @@ def init(path):
     global T_FINAL_N
     global P_SALIDA
     global DIR_SALIDA
+    global DIR_ALTERNA
     global P_CAMBIO
     global N_SERVICIOS
     global T_MIN_DESCANSOS
@@ -50,6 +52,7 @@ def init(path):
     T_FINAL_N       = datos['T_FINAL_N']
     P_SALIDA        = datos['P_SALIDA']
     DIR_SALIDA      = datos['DIR_SALIDA']
+    DIR_ALTERNA     = datos['DIR_ALTERNA']
     P_CAMBIO        = datos['P_CAMBIO']
     N_SERVICIOS     = datos['N_SERVICIOS']
     T_MIN_DESCANSOS = datos['T_MIN_DESCANSOS']
