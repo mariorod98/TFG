@@ -8,7 +8,7 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import PatternFill
 import os.path
 
-import globales
+import globales as glo
 
 colores = ['ea9999', 'ffe599', 'b6d7a8', 'a2c4c9', 'd199ea', 'eac099', '999eea', 'ea99c7']
 
@@ -29,12 +29,12 @@ def exportar_solucion(solucion, archivo, titulo, sobreescribir):
     i_ant = 0
     i = 0
     while i < len(solucion):
-        if globales.HORARIO_TRENES[i]['TREN'] != globales.HORARIO_TRENES[i_ant]['TREN']:
+        if glo.HORARIO_TRENES[i]['TREN'] != glo.HORARIO_TRENES[i_ant]['TREN']:
             fila += 1
             columna = 0
 
         posicion = letras[columna] + str(fila)
-        ws[posicion] = globales.HORARIO_TRENES[i]['TIEMPO']
+        ws[posicion] = glo.HORARIO_TRENES[i]['TIEMPO']
         ws[posicion].fill = PatternFill(fill_type='solid',
                                         start_color=colores[solucion[i]],
                                         end_color=colores[solucion[i]])
