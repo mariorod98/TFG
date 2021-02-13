@@ -9,6 +9,8 @@
 	"T_FINAL_N"		: 7,
 	"P_SALIDA"		: 3,
 	"DIR_SALIDA"	: -1,
+	"DIR_ALTERNA"	 : false,
 	"P_CAMBIO"		: [3, 15],
-	"N_SERVICIOS"	: 20
+	"N_SERVICIOS"	: 20,
+	"T_MIN_DESCANSO": 15
 }

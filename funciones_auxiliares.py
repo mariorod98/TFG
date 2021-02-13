@@ -43,7 +43,7 @@ def calcula_periodos_servicio(solucion, servicio):
 
     # parada anterior a la actual, inicializado a la primera parada
     p_ini_periodo = calcula_inicio_periodo(indices_paradas[0])
-    p_fin_periodo = p_ini_periodo  # parada de inicio de un periodo de trabajo,
+    p_fin_periodo = indices_paradas[0]  # parada de inicio de un periodo de trabajo,
 
     # para cada parada en la que se encuentre el servicio (a partir de la segunda)
     for p in indices_paradas[1:]:

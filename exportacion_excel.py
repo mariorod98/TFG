@@ -10,7 +10,7 @@ import os.path
 
 import globales as glo
 
-colores = ['ea9999', 'ffe599', 'b6d7a8', 'a2c4c9', 'd199ea', 'eac099', '999eea', 'ea99c7']
+colores = ['ea9999', 'ffe599', 'b6d7a8', 'a2c4c9', 'd199ea', 'eac099', '999eea', 'ea99c7', 'ffffff']
 
 
 def exportar_solucion(solucion, archivo, titulo, sobreescribir):
