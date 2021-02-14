@@ -9,7 +9,6 @@ import funciones_auxiliares as aux
 
 import globales as glo
 
-
 # RESTRICIONES DURAS
 #   Un servicio no puede tener más de 4 horas de trabajo seguidas
 
@@ -138,3 +137,6 @@ def funcion_objetivo_3(solucion):
     valor = peso1 * (std_trabajo + std_descanso) + peso2 * (diferencia_trabajo + diferencia_descanso) + peso3 * n_periodos
 
     return True, valor
+
+
+funcion_objetivo = funcion_objetivo_3

@@ -35,34 +35,24 @@ def genera_vecino_2(solucion):
     return vecino
 
 
-def busqueda_local(max_iter, max_vecinos):
+def busqueda_local(sol_ini, max_iter, max_vecinos):
     iter_act = 0
 
     # se calcula la solucion inicial
-    # solucion_act = np.array(
-                 # [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 0,
-                 # 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2,
-                 # 3, 3, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3])
-    solucion_act=np.array(
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])
-    fitness_act = fitness.funcion_objetivo_3(solucion_act)[1]
+    solucion_act = sol_ini
+    fitness_act  = fitness.funcion_objetivo(solucion_act)[1]
 
     # bucle principal
     while iter_act < max_iter:
         vecinos_generados = 0
         vecino_encontrado = False
 
-        print('iter: ' + str(iter_act))
-        print(solucion_act)
-        print(fitness_act)
         # se generan vecinos hasta que se encuentre uno mejor o se llegue al máximo de vecinos generados
         while vecinos_generados < max_vecinos and not vecino_encontrado:
             # se genera una nueva solución vecina
             solucion_new = genera_vecino_2(solucion_act)
             # se comprueba que la solución es válida y se obtiene su fitness
-            es_valida, fitness_new = fitness.funcion_objetivo_3(solucion_new)
+            es_valida, fitness_new = fitness.funcion_objetivo(solucion_new)
 
             # si es válida y el fitness es mejor, se reemplaza la solución actual por la nueva
             if es_valida and fitness_new < fitness_act:
@@ -80,4 +70,4 @@ def busqueda_local(max_iter, max_vecinos):
         # se aumenta el número de iteraciones realizadas
         iter_act += 1
 
-    return iter_act, solucion_act, fitness_act
+    return solucion_act, fitness_act

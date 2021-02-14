@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Funciones del algoritmo greedy para generar la solución inicial
+Funciones del algoritmo greedy
 Autor: Mario Rodríguez Chaves
 """
 
@@ -12,29 +12,36 @@ import globales as glo
 
 
 # devuelve el elemento más prometedor entre los candidatos
-def obtiene_candidatos_posibles(posicion, ultimas_paradas):
+def obtiene_candidatos_posibles(posicion, ultimas_paradas, solucion):
     # se inicializa el array de candidatos
     candidatos = []
 
-    pos_ini = aux.calcula_inicio_periodo(posicion)
-    # se obtiene el tiempo al que se llega a esa posicion
-    t_posicion = glo.HORARIO_TRENES[pos_ini]['TIEMPO']
-
     for c in range(0, glo.N_SERVICIOS):
-        # if c in ultimas_paradas:
-        if ultimas_paradas[c]['TIEMPO'] <= t_posicion:
+        sol_new = solucion.copy()
+        sol_new[posicion] = c
+        periodos = aux.calcula_periodos_servicio(sol_new, c)
+        es_valido = aux.valida_servicio(periodos)
+        if es_valido:
             candidatos.append(c)
-        # else:
-        #     candidatos.append(c)
 
     return candidatos
 
 
-def selecciona_candidato(posicion, candidatos, ultimas_paradas):
+def selecciona_candidato(posicion, candidatos, ultimas_paradas, RLC):
     seleccionado = -1
 
-    minimo = min(ultimas_paradas, key=lambda x: x['TIEMPO'])['TIEMPO']
-    seleccionados = [c for c in candidatos if ultimas_paradas[c]['TIEMPO'] == minimo]
+    # minimo = min(ultimas_paradas, key=lambda x: x['TIEMPO'])['TIEMPO']
+    # seleccionados = [c for c in candidatos if ultimas_paradas[c]['TIEMPO'] == minimo]
+
+    paradas_ordenadas  = [x for x in range(0, len(ultimas_paradas), 1)]
+    paradas_ordenadas.sort(key=lambda x: ultimas_paradas[x]['TIEMPO'])
+
+    seleccionados = []
+    for p in paradas_ordenadas:
+        if p in candidatos:
+            seleccionados.append(p)
+
+        if len(seleccionados) == RLC: break
 
     if seleccionados:
         tren = glo.HORARIO_TRENES[posicion]['TREN']
@@ -42,15 +49,14 @@ def selecciona_candidato(posicion, candidatos, ultimas_paradas):
 
         if mismo_tren:
             seleccionados.append(mismo_tren[0])
-
         seleccionado = rnd.choice(seleccionados)
 
     return seleccionado
 
 
-def greedy():
+def greedy(RLC):
     # inicializamos la solución a vacio
-    solucion = np.empty([len(glo.HORARIO_TRENES)], dtype=np.int)
+    solucion = np.full([len(glo.HORARIO_TRENES)], -1)
 
     # inicializamos una lista con los indices de las paradas ordenados temporalmente
     paradas_ordenadas = [x for x in range(0, len(glo.HORARIO_TRENES))]
@@ -65,8 +71,8 @@ def greedy():
     i = 0
     while i < len(paradas_ordenadas):
         pos = paradas_ordenadas[i]
-        candidatos = obtiene_candidatos_posibles(pos, ultimas_paradas)
-        seleccionado = selecciona_candidato(pos, candidatos, ultimas_paradas)
+        candidatos = obtiene_candidatos_posibles(pos, ultimas_paradas, solucion)
+        seleccionado = selecciona_candidato(pos, candidatos, ultimas_paradas, RLC)
 
         if seleccionado != -1:
             solucion[pos] = seleccionado
@@ -78,6 +84,5 @@ def greedy():
             indice = glo.HORARIO_TRENES.index(parada_minima)
             i = paradas_ordenadas.index(indice)
             ultimas_paradas = penultimas_paradas.copy()
-
 
     return solucion
