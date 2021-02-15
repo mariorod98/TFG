@@ -54,22 +54,19 @@ def exportar_solucion(solucion, archivo, titulo, sobreescribir):
     wb.save(archivo)
 
 
-def crear_grafico(archivo, titulo, sobreescribir):
+def crear_grafico(titulo_grafico, archivo, titulo, sobreescribir):
     wb = abre_workbook(archivo, titulo, sobreescribir)
     ws = wb.worksheets[-1]
 
-    iteraciones = [x for x, y, z in glo.RESULTADOS_GRASP]
-    resultados = [y for x, y, z in glo.RESULTADOS_GRASP]
-
-    # ws.append(iteraciones)
-    # ws.append(resultados)
+    iteraciones = [x for x, y, z in glo.RESULTADOS]
+    resultados = [y for x, y, z in glo.RESULTADOS]
 
     for i in range(0, len(iteraciones)):
         ws.append([iteraciones[i], resultados[i]])
 
     values = Reference(ws, min_col=2, min_row=1, max_col=2, max_row=len(iteraciones))
     chart = LineChart()
-    chart.title = "Valor de la función fitness para cada iteración del algoritmo GRASP"
+    chart.title = titulo_grafico
     chart.style = 13
     chart.y_axis.title = 'Fitness'
     chart.x_axis.title = 'Iteración'

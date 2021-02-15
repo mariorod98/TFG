@@ -22,9 +22,10 @@ T_MIN_DESCANSOS = 0     # tiempo mínimo entre dos periodos para que se consider
 
 HORARIO_TRENES = []     # conjunto de tuplas (TREN, PARADA, TIEMPO) que conforman el horario de la línea
 
-RESULTADOS_GRASP = []  # lista que almacenará los resultados obtenidos por el algoritmo GRASP en cada iteracion
+RESULTADOS = []         # lista que almacenará los resultados obtenidos durante la ejecucion de un algoritmo
 
 
+# función que inicializa las globales
 def init(path):
     global N_TRENES
     global INI_JORNADA
