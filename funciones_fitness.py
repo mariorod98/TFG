@@ -28,7 +28,7 @@ def funcion_objetivo_1(solucion):
 
         # si el servicio presenta inconsistencias, se trata de una solución no factible
         if not aux.valida_servicio(periodos):
-            return 99999
+            return 99999, [], []
 
         # se calcula el tiempo de trabajo y de descanso del servicio
         t_trabajo, t_descanso = aux.calcula_tiempos_servicio(periodos)
@@ -45,7 +45,7 @@ def funcion_objetivo_1(solucion):
     valor = std_trabajo + std_descanso
 
     # devolvemos el valor obtenido
-    return valor
+    return valor, tiempos_trabajo, tiempos_descanso
 
 
 # FUNCIÓN 2
@@ -66,14 +66,14 @@ def funcion_objetivo_2(solucion):
 
         # si el servicio no tiene periodos de trabajo, se trata de una solución no factible
         if not periodos:
-            return 99999
+            return 99999, [], []
 
         # se ordenan cronológicamente los periodos de trabajo del servicio
         periodos.sort(key=lambda x: glo.HORARIO_TRENES[x[0]]['TIEMPO'])
 
         # si el servicio presenta inconsistencias, se trata de una solución no factible
         if not aux.valida_servicio(periodos):
-            return 99999
+            return 99999, [], []
 
         # se obtienen el tiempo de trabajo y descanso del servicio
         t_trabajo, t_descanso = aux.calcula_tiempos_servicio(periodos)
@@ -97,7 +97,7 @@ def funcion_objetivo_2(solucion):
     # se calcula el valor de la función fitness a partir de los datos obtenidos, aplicando sus respectivos pesos
     valor = peso * (std_trabajo + std_descanso) + (1-peso) * (diferencia_trabajo + diferencia_descanso)
 
-    return valor
+    return valor, tiempos_trabajo, tiempos_descanso
 
 
 def funcion_objetivo_3(solucion):
@@ -116,13 +116,13 @@ def funcion_objetivo_3(solucion):
         periodos = aux.calcula_periodos_servicio(solucion, servicio)
 
         if not periodos:
-            return 99999
+            return 99999, [], []
 
         n_periodos += len(periodos)
         periodos.sort(key=lambda x: glo.HORARIO_TRENES[x[0]]['TIEMPO'])
 
         if not aux.valida_servicio(periodos):
-            return 99999
+            return 99999, [], []
 
         t_trabajo, t_descanso = aux.calcula_tiempos_servicio(periodos)
 
@@ -140,7 +140,7 @@ def funcion_objetivo_3(solucion):
 
     valor = peso1 * (std_trabajo + std_descanso) + peso2 * (diferencia_trabajo + diferencia_descanso) + peso3 * n_periodos
 
-    return valor
+    return valor, tiempos_trabajo, tiempos_descanso
 
 
 funcion_objetivo = funcion_objetivo_3

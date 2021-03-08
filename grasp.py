@@ -24,7 +24,7 @@ def GRASP(LRC, max_iter, max_iter_bl, max_vecinos_bl):
         # se genera una solución inicial a partir del greedy
         sol_ini = greedy.greedy(LRC)
         # se aplica una búsqueda local a la solución generada
-        sol_act, fit_act = bl.busqueda_local(sol_ini, max_iter_bl, max_vecinos_bl)
+        sol_act, fit_act, t_trabajo, t_descanso = bl.busqueda_local(sol_ini, max_iter_bl, max_vecinos_bl)
 
         # si la solución actual es mejor que la mejor encontrada, se modifica la mejor
         if fit_act < best_fit:
@@ -34,11 +34,11 @@ def GRASP(LRC, max_iter, max_iter_bl, max_vecinos_bl):
         # se aumenta el contador
         it += 1
 
-        # print('it= ' + str(it) + ' ' + str(fit_act))
+        print('it= ' + str(it) + ' ' + str(fit_act))
         # print(sol_act)
 
         # se almacenan los resultados
-        glo.RESULTADOS.append([it, fit_act, sol_act])
+        glo.RESULTADOS.append([it, fit_act, t_trabajo, t_descanso, sol_act])
 
     # se devuelve la mejor solución y su fitness
     return best_sol, best_fit

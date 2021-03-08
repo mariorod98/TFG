@@ -5,7 +5,6 @@ Autor: Mario Rodríguez Chaves
 """
 
 import json
-
 import globales as glo
 
 
@@ -54,7 +53,7 @@ def calcula_tramos():
     t_parada.append({'INICIO': cambio_old, 'FIN': n_paradas, 'DIRECCION': 1, 'TIEMPO': 0})
     t_parada.append({'INICIO': n_paradas, 'FIN': cambio_old, 'DIRECCION': -1, 'TIEMPO': 0})
 
-    # para el resto de paradas, se calcula el recorrido
+    # para cada tramo, se calcula el tiempo
     for tramo in t_parada:
         if tramo['DIRECCION'] > 0:
             p_ini = tramo['INICIO']
@@ -97,7 +96,7 @@ def calcula_horario_tren(tramos, hora_ini, hora_fin, tren, direccion):
         # se obtiene la siguiente parada a visitar
         p_act = p_ant + direccion
 
-        # si la parada anterior era la primera, se cambia la dirección, se fija la parada actuala la primera
+        # si la parada anterior era la primera, se cambia la dirección, se fija la parada actual a la primera
         # y se añade el tiempo de espera en la parada
         if p_act < 0:
             p_ant = 0

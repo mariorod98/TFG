@@ -27,7 +27,7 @@ def calcula_inicio_periodo(posicion):
 
 # Función que calcula los periodos de trabajo de un servicio
 # Trabaja con la solución ordenada temporalmente
-# Primero se obtienen todos los periodos de paradas consecutivas
+# Tiene en cuenta que el inicio del periodo puede ser la parada anterior a la reflejada en la solución
 def calcula_periodos_servicio(solucion, servicio):
     periodos = []  # periodos de trabajo del servicio
     indices_paradas = obtiene_indices(solucion, servicio)  # paradas de trabajo del servicio

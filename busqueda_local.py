@@ -41,7 +41,9 @@ def busqueda_local(sol_ini, max_iter, max_vecinos):
 
     # se calcula la solucion inicial
     solucion_act = sol_ini
-    fitness_act  = fitness.funcion_objetivo(solucion_act)
+    fitness_act, t_trabajo, t_descanso  = fitness.funcion_objetivo(solucion_act)
+    best_t_trabajo = t_trabajo
+    best_t_descanso = t_descanso
 
     # bucle principal
     while iter_act < max_iter:
@@ -53,13 +55,15 @@ def busqueda_local(sol_ini, max_iter, max_vecinos):
             # se genera una nueva solución vecina
             solucion_new = genera_vecino(solucion_act)
             # se comprueba que la solución es válida y se obtiene su fitness
-            fitness_new = fitness.funcion_objetivo(solucion_new)
+            fitness_new, t_trabajo, t_descanso = fitness.funcion_objetivo(solucion_new)
 
             # si es válida y el fitness es mejor, se reemplaza la solución actual por la nueva
             if fitness_new < fitness_act:
                 vecino_encontrado = True
                 solucion_act = solucion_new
                 fitness_act = fitness_new
+                best_t_trabajo = t_trabajo
+                best_t_descanso = t_descanso
 
             # se actualiza el número de vecinos generado
             vecinos_generados += 1
@@ -72,4 +76,4 @@ def busqueda_local(sol_ini, max_iter, max_vecinos):
         iter_act += 1
 
     # devolvemos la solución obtenida y su fitness
-    return solucion_act, fitness_act
+    return solucion_act, fitness_act, best_t_trabajo, best_t_descanso

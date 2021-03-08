@@ -22,7 +22,7 @@ def enfriamiento_simulado(sol_ini, max_iter):
 
     # se inicializa la solucion actual y se calcula su fitness
     sol_act = sol_ini
-    fit_act = fitness.funcion_objetivo(sol_ini)
+    fit_act, t_trabajo, t_descanso = fitness.funcion_objetivo(sol_ini)
 
     # se inicializa la mejor solucion a la solucion actual
     best_sol = sol_act
@@ -55,7 +55,7 @@ def enfriamiento_simulado(sol_ini, max_iter):
         while n_vecinos < max_vecinos:
             # se genera un vecino nuevo
             sol_new = genera_vecino(sol_act)
-            fit_new = fitness.funcion_objetivo(sol_new)
+            fit_new, t_trabajo, t_descanso = fitness.funcion_objetivo(sol_new)
 
             # se obtiene la diferencia entre el fit nuevo y el actual
             dif = fit_new - fit_act
@@ -74,7 +74,7 @@ def enfriamiento_simulado(sol_ini, max_iter):
                 # print(fit_act)
 
                 # se almacena el resultado obtenido
-                glo.RESULTADOS.append([it, fit_act, sol_act])
+                glo.RESULTADOS.append([it, fit_act, t_trabajo, t_descanso, sol_act])
 
                 # si la solución obtenida es mejor que la mejor actual, se modifica la solucion mejor
                 if fit_act < best_fit:
