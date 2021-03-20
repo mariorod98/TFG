@@ -15,12 +15,12 @@ import exportacion_excel as excel
 
 rnd.seed(125)
 path = ".\\metro_granada.json"
-archivo_resultados = 'resultados.xlsx'
+archivo_resultados = 'es.xlsx'
 glo.init(path)
 
 # Se inicializan los parámetros
 max_iter = 15000
-max_vecinos = len(glo.HORARIO_TRENES) * 100
+max_vecinos = len(glo.HORARIO_TRENES) * 10
 LRC = 2
 sol_ini = greedy.greedy(LRC)
 
@@ -29,7 +29,7 @@ sol_ini = greedy.greedy(LRC)
 ################################
 
 # se ejecuta la búsqueda local
-solucion, fit, t_trabajo, t_descanso = bl.busqueda_local(sol_ini, max_iter, max_vecinos)
+solucion, fit, resultados = bl.busqueda_local(sol_ini, max_iter, max_vecinos, True)
 
 print('BUSQUEDA LOCAL')
 print(solucion)
@@ -39,11 +39,14 @@ print('fit: ' + str(fit))
 # excel.exportar_solucion(solucion, archivo_resultados, 'bl_best', True)
 excel.crear_hoja_servicios(solucion, archivo_resultados, 'bl_horario', True)
 
+# se almacenan el gráfico de progresión del algoritmo
+titulo_grafico = 'Resultados para cada iteración de la Búsqueda Local'
+excel.aniade_graficos(titulo_grafico, archivo_resultados, 'bl_graficos', False)
 
 ################################
 # ENFRIAMIENTO SIMULADO        #
 ################################
-
+max_iter = 20000
 # se ejecuta el enfriamiento simulado
 solucion, fit = es.enfriamiento_simulado(sol_ini, max_iter)
 
@@ -56,8 +59,8 @@ print('fit: ' + str(fit))
 excel.crear_hoja_servicios(solucion, archivo_resultados, 'es_horario', False)
 
 # se almacenan el gráfico de progresión del algoritmo
-titulo_grafico = 'Valor de la función fitness para cada iteración del Enfriamiento Simulado'
-excel.crear_graficos(titulo_grafico, archivo_resultados, 'es_graficos', False)
+titulo_grafico = 'Resultados para cada iteración del Enfriamiento Simulado'
+excel.aniade_graficos(titulo_grafico, archivo_resultados, 'es_graficos', False, True)
 
 
 ################################
@@ -65,9 +68,9 @@ excel.crear_graficos(titulo_grafico, archivo_resultados, 'es_graficos', False)
 ################################
 
 # se asignan los valores de los parámetros
-max_iter = 20
-max_iter_bl = 5000
-max_vecinos_bl = 2500
+max_iter = 10
+max_iter_bl = 3000
+max_vecinos_bl = 2000
 
 # se ejecuta el GRASP
 solucion, fit = grasp.GRASP(LRC, max_iter, max_iter_bl, max_vecinos_bl)
@@ -81,6 +84,6 @@ print('fit: ' + str(fit))
 excel.crear_hoja_servicios(solucion, archivo_resultados, 'grasp_horario', False)
 
 # se almacenan el gráfico de progresión del algoritmo
-titulo_grafico = 'Valor de la función fitness para cada iteración del algoritmo GRASP'
-excel.crear_graficos(titulo_grafico, archivo_resultados, 'grasp_graficos', False)
+titulo_grafico = 'Resultados para cada iteración del algoritmo GRASP'
+excel.aniade_graficos(titulo_grafico, archivo_resultados, 'grasp_graficos', False)
 

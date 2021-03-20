@@ -91,6 +91,19 @@ def exportar_solucion(solucion, archivo, titulo, sobreescribir):
     wb.save(archivo)
 
 
+def crea_grafico(valores, titulo, y_axis, x_axis):
+    # se añade al workbook la gráfica de la evolución del fitness
+    values = valores
+    chart = LineChart()
+    chart.title = titulo
+    chart.style = 13
+    chart.y_axis.title = y_axis
+    chart.x_axis.title = x_axis
+    chart.add_data(values)
+
+    return chart
+
+
 # Función que crea gráficos de progreso por iteración del valor de la función fitness
 # la media de tiempos de trabajo y la media de tiempos de descanso
 # Parámetros de entrada:
@@ -98,58 +111,99 @@ def exportar_solucion(solucion, archivo, titulo, sobreescribir):
 #   archivo: path del archivo xls a abrir
 #   titulo: nombre de la worksheet
 #   sobreescribir: booleano que indica si se quiere sobreescribir el contenido del archivo
-def crear_graficos(titulo_grafico, archivo, titulo, sobreescribir):
+def aniade_graficos(titulo_grafico, archivo, titulo, sobreescribir, es=False):
     # se abre el workbook y se escoge la última página
     wb = abre_workbook(archivo, titulo, sobreescribir)
     ws = wb.worksheets[-1]
 
     # se obtiene una lista con los números de iteración
-    iteraciones = [it for it, fit, t_trabajo, t_descanso, sol in glo.RESULTADOS]
+    iteraciones = [it for it, fit, resultados, sol in glo.RESULTADOS]
     # se obtiene una lista con el valor fitness de cada iteración
-    fitness = [fit for it, fit, t_trabajo, t_descanso, sol in glo.RESULTADOS]
+    fitness = [fit for it, fit, resultados, sol in glo.RESULTADOS]
+
     # se obtiene una lista con los tiempos de trabajo de cada iteración
-    t_trabajo = [np.array(t_trabajo, dtype=int) for it, fit, t_trabajo, t_descanso, sol in glo.RESULTADOS]
+    t_trabajo = [np.array(resultados['T_TRABAJO'], dtype=int) for it, fit, resultados, sol in glo.RESULTADOS]
     # se obtiene una lista con los tiempos de descanso de cada iteración
-    t_descanso = [np.array(t_descanso, dtype=int) for it, fit, t_trabajo, t_descanso, sol in glo.RESULTADOS]
+    t_descanso = [np.array(resultados['T_DESCANSO'], dtype=int) for it, fit, resultados, sol in glo.RESULTADOS]
+    # se obtiene una lista con la cantidad de periodos de trabajo en cada iteración
+    n_periodos = [np.array(resultados['N_PERIODOS'], dtype=int) for it, fit, resultados, sol in glo.RESULTADOS]
+    # se obtiene una lista con los tiempos de jonada de cada iteración
+    t_jornada = [np.array(resultados['T_JORNADA'], dtype=int) for it, fit, resultados, sol in glo.RESULTADOS]
+
+    if es:
+        temperatura = [resultados['temperatura'] for it, fit, resultados, sol in glo.RESULTADOS]
+        aceptacion = [resultados['aceptacion'] for it, fit, resultados, sol in glo.RESULTADOS]
 
     # para cada iteración, se calcula la media de tiempos de trabajo
     mean_trabajo = [t.mean() for t in t_trabajo]
     # para cada iteración, se calcula la media de los tiempos de descanso
     mean_descanso = [t.mean() for t in t_descanso]
+    # para cada iteración, se calcula la media de los tiempos de descanso
+    mean_periodos = [t.mean() for t in n_periodos]
+    # para cada iteración, se calcula la media de los tiempos de descanso
+    mean_jornada = [t.mean() for t in t_jornada]
 
-    # se almacenan las iteraciones en el workbook
-    for i in range(0, len(iteraciones)):
-        ws.append([iteraciones[i], fitness[i], mean_trabajo[i], mean_descanso[i]])
+    std_trabajo = [t.std() for t in t_trabajo]
+    std_descanso = [t.std() for t in t_descanso]
 
-    # se añade al workbook la gráfica de la evolución del fitness
-    values = Reference(ws, min_col=2, min_row=1, max_col=2, max_row=len(iteraciones))
-    chart = LineChart()
-    chart.title = titulo_grafico
-    chart.style = 13
-    chart.y_axis.title = 'Fitness'
-    chart.x_axis.title = 'Iteración'
-    chart.add_data(values)
-    ws.add_chart(chart, "G1")
+    if es:
+        # se almacenan las iteraciones en el workbook
+        for i in range(0, len(iteraciones)):
+            ws.append([iteraciones[i], fitness[i], mean_trabajo[i], mean_descanso[i], std_trabajo[i], std_descanso[i],
+                       mean_periodos[i], mean_jornada[i], temperatura[i], aceptacion[i]])
+    else:
+        # se almacenan las iteraciones en el workbook
+        for i in range(0, len(iteraciones)):
+            ws.append([iteraciones[i], fitness[i], mean_trabajo[i], mean_descanso[i], std_trabajo[i], std_descanso[i],
+                       mean_periodos[i], mean_jornada[i]])
 
-    # se añade al workbook la gráfica de la evolución de los tiempos de trabajo
-    values = Reference(ws, min_col=3, min_row=1, max_col=3, max_row=len(iteraciones))
-    chart = LineChart()
-    chart.title = titulo_grafico
-    chart.style = 13
-    chart.y_axis.title = 'Media trabajo'
-    chart.x_axis.title = 'Iteración'
-    chart.add_data(values)
-    ws.add_chart(chart, "G17")
+    valores = Reference(ws, min_col=2, min_row=1, max_col=2, max_row=len(iteraciones))
+    chart = crea_grafico(valores, titulo_grafico, 'Fitness', 'Iteración')
+    ws.add_chart(chart, "L1")
 
-    # se añade al workbook la gráfica de la evolución de los tiempos de descanso
-    values = Reference(ws, min_col=4, min_row=1, max_col=4, max_row=len(iteraciones))
-    chart = LineChart()
-    chart.title = titulo_grafico
-    chart.style = 13
-    chart.y_axis.title = 'Media descanso'
-    chart.x_axis.title = 'Iteración'
-    chart.add_data(values)
-    ws.add_chart(chart, "G34")
+    valores = Reference(ws, min_col=3, min_row=1, max_col=3, max_row=len(iteraciones))
+    chart = crea_grafico(valores, titulo_grafico, 'Media trabajo', 'Iteración')
+    ws.add_chart(chart, "L16")
+
+    valores = Reference(ws, min_col=4, min_row=1, max_col=4, max_row=len(iteraciones))
+    chart = crea_grafico(valores, titulo_grafico, 'Media descanso', 'Iteración')
+    ws.add_chart(chart, "L31")
+
+    valores = Reference(ws, min_col=5, min_row=1, max_col=5, max_row=len(iteraciones))
+    chart = crea_grafico(valores, titulo_grafico, 'Std trabajo', 'Iteración')
+    ws.add_chart(chart, "L46")
+
+    valores = Reference(ws, min_col=6, min_row=1, max_col=6, max_row=len(iteraciones))
+    chart = crea_grafico(valores, titulo_grafico, 'Std descanso', 'Iteración')
+    ws.add_chart(chart, "L61")
+
+    valores = Reference(ws, min_col=7, min_row=1, max_col=7, max_row=len(iteraciones))
+    chart = crea_grafico(valores, titulo_grafico, 'Media periodos', 'Iteración')
+    ws.add_chart(chart, "L76")
+
+    valores = Reference(ws, min_col=8, min_row=1, max_col=8, max_row=len(iteraciones))
+    chart = crea_grafico(valores, titulo_grafico, 'Media jornada', 'Iteración')
+    ws.add_chart(chart, "L91")
+
+    valores = Reference(ws, min_col=8, min_row=1, max_col=8, max_row=len(iteraciones))
+    chart = crea_grafico(valores, titulo_grafico, 'Media jornada', 'Iteración')
+    ws.add_chart(chart, "L91")
+
+    if es:
+        valores = Reference(ws, min_col=9, min_row=1, max_col=9, max_row=len(iteraciones))
+        chart = crea_grafico(valores, titulo_grafico, 'Temperatura', 'Iteración')
+        ws.add_chart(chart, "V1")
+
+        valores = Reference(ws, min_col=10, min_row=1, max_col=10, max_row=len(iteraciones))
+        chart = crea_grafico(valores, titulo_grafico, 'Aceptacion', 'Iteración')
+
+        s1 = chart.series[0]
+        s1.marker.symbol = "triangle"
+        s1.marker.graphicalProperties.solidFill = "FF0000"  # Marker filling
+        s1.marker.graphicalProperties.line.solidFill = "FF0000"  # Marker outline
+        s1.graphicalProperties.line.noFill = True
+
+        ws.add_chart(chart, "V16")
 
     # se guarda el workbook
     wb.save(archivo)
@@ -199,7 +253,7 @@ def crear_hoja_servicios(solucion, archivo, titulo, sobreescribir):
 
     # se modifica el tamaño de las columnas del archivo excel
     for col in range(1, len(horas) + 2):
-        ws.column_dimensions[get_column_letter(col)].width = 14
+        ws.column_dimensions[get_column_letter(col)].width = 6
 
     # se insertan las horas en la worksheet
     ws.append([''] + horas)
@@ -243,7 +297,7 @@ def crear_hoja_servicios(solucion, archivo, titulo, sobreescribir):
                 # se pone en la casilla de inicio del periodo el tren y la fecha de inicio
                 ws.cell(fila, pos_ini + 1, 'tren ' + str(tren) + ' ' + min_to_hora(t_ini))
                 # se pone en la casilla de fin del periodo el tren y la fecha de fin
-                ws.cell(fila, pos_fin, 'tren ' + str(tren) + ' ' + min_to_hora(t_fin))
+                ws.cell(fila, pos_fin, min_to_hora(t_fin))
 
                 # se pintan todas las casillas entre la inicial y la final con el color del tren correspondiente
                 for i in range(pos_ini + 1, pos_fin + 1):

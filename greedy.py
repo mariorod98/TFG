@@ -68,6 +68,7 @@ def greedy(RLC):
 
     penultimas_paradas = ultimas_paradas.copy()
 
+    it = 0
     i = 0
     while i < len(paradas_ordenadas):
         pos = paradas_ordenadas[i]
@@ -84,5 +85,9 @@ def greedy(RLC):
             indice = glo.HORARIO_TRENES.index(parada_minima)
             i = paradas_ordenadas.index(indice)
             ultimas_paradas = penultimas_paradas.copy()
+            it += 1
+            if it >= 5000:
+                print("Se han generado 5 000 soluciones Greedy y ninguna ha sido válida.")
+                exit(-1)
 
     return solucion

@@ -19,6 +19,9 @@ DIR_ALTERNA = False     # especifica si los trenes alternan la dirección al sal
 P_CAMBIO = []           # paradas habilitadas para el cambio entre conductores
 N_SERVICIOS = 0         # número de servicios de la jornada
 T_MIN_DESCANSOS = 0     # tiempo mínimo entre dos periodos para que se considere un descanso
+T_MAX_TRABAJO = 0       # tiempo máximo de trabajo continuo en un servicio
+T_OPTIMO_TRABAJO = 0    # tiempo deseado de trabajo por servicio
+T_OPTIMO_DESCANSO = 0   # tiempo deseado de descanso por servicio
 
 HORARIO_TRENES = []     # conjunto de tuplas (TREN, PARADA, TIEMPO) que conforman el horario de la línea
 
@@ -41,22 +44,28 @@ def init(path):
     global P_CAMBIO
     global N_SERVICIOS
     global T_MIN_DESCANSOS
+    global T_MAX_TRABAJO
     global HORARIO_TRENES
+    global T_OPTIMO_DESCANSO
+    global T_OPTIMO_TRABAJO
 
     datos = lectura.lee_entrada(path)
 
-    N_TRENES        = datos['N_TRENES']
-    INI_JORNADA     = datos['INI_JORNADA']
-    FIN_JORNADA     = datos['FIN_JORNADA']
-    N_PARADAS       = datos['N_PARADAS']
-    T_IDA           = datos['T_IDA']
-    T_VUELTA        = datos['T_VUELTA']
-    T_FINAL_1       = datos['T_FINAL_1']
-    T_FINAL_N       = datos['T_FINAL_N']
-    P_SALIDA        = datos['P_SALIDA']
-    DIR_SALIDA      = datos['DIR_SALIDA']
-    DIR_ALTERNA     = datos['DIR_ALTERNA']
-    P_CAMBIO        = datos['P_CAMBIO']
-    N_SERVICIOS     = datos['N_SERVICIOS']
-    T_MIN_DESCANSOS = datos['T_MIN_DESCANSOS']
-    HORARIO_TRENES  = lectura.calcula_horario_trenes()
+    N_TRENES          = datos['N_TRENES']
+    INI_JORNADA       = datos['INI_JORNADA']
+    FIN_JORNADA       = datos['FIN_JORNADA']
+    N_PARADAS         = datos['N_PARADAS']
+    T_IDA             = datos['T_IDA']
+    T_VUELTA          = datos['T_VUELTA']
+    T_FINAL_1         = datos['T_FINAL_1']
+    T_FINAL_N         = datos['T_FINAL_N']
+    P_SALIDA          = datos['P_SALIDA']
+    DIR_SALIDA        = datos['DIR_SALIDA']
+    DIR_ALTERNA       = datos['DIR_ALTERNA']
+    P_CAMBIO          = datos['P_CAMBIO']
+    N_SERVICIOS       = datos['N_SERVICIOS']
+    T_MIN_DESCANSOS   = datos['T_MIN_DESCANSOS']
+    T_MAX_TRABAJO     = datos['T_MAX_TRABAJO']
+    T_OPTIMO_TRABAJO  = datos['T_OPTIMO_TRABAJO']
+    T_OPTIMO_DESCANSO = datos['T_OPTIMO_DESCANSO']
+    HORARIO_TRENES    = lectura.calcula_horario_trenes()
