@@ -34,9 +34,6 @@ def GRASP(LRC, max_iter, max_iter_bl, max_vecinos_bl):
         # se aumenta el contador
         it += 1
 
-        print('it= ' + str(it) + ' ' + str(fit_act))
-        # print(sol_act)
-
         # se almacenan los resultados
         glo.RESULTADOS.append([it, fit_act, resultados, sol_act])
 

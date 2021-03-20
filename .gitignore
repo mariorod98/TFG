@@ -3,3 +3,4 @@ venv*
 .idea*
 _pycache_*
 *.pyc
+*.xlsx

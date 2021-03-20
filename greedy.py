@@ -20,7 +20,8 @@ def obtiene_candidatos_posibles(posicion, ultimas_paradas, solucion):
         sol_new = solucion.copy()
         sol_new[posicion] = c
         periodos = aux.calcula_periodos_servicio(sol_new, c)
-        es_valido = aux.valida_servicio(periodos)
+        periodos_comprimidos = aux.comprime_periodos(periodos)
+        es_valido = aux.valida_servicio(periodos, periodos_comprimidos)
         if es_valido:
             candidatos.append(c)
 

@@ -92,10 +92,7 @@ def comprime_periodos(periodos):
 
 # Función que valida que el servicio es consistente. Comprueba que el conductor no se encuentre en dos trenes distintos
 # en algún momento.
-def valida_servicio(periodos):
-    # obtenemos los periodos de trabajo
-    periodos_comprimidos = comprime_periodos(periodos)
-
+def valida_servicio(periodos, periodos_comprimidos):
     # para cada periodo de trabajo
     for periodo in periodos_comprimidos:
         t_ini = glo.HORARIO_TRENES[periodo[0]]['TIEMPO']
@@ -135,12 +132,10 @@ def valida_servicio(periodos):
 
 # calcula los tiempos de trabajo y descanso de un servicio
 # ahora mismo el tiempo entre periodos siempre es tiempo de descanso
-def calcula_tiempos_servicio(periodos):
+def calcula_tiempos_servicio(periodos_comprimidos):
     t_trabajo = 0  # tiempo de trabajo del servicio
     t_descanso = 0  # tiempo de descanso del servicio
     t_fin_ant = False
-
-    periodos_comprimidos = comprime_periodos(periodos)
 
     # para cada periodo
     for periodo in periodos_comprimidos:

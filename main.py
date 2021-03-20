@@ -13,14 +13,15 @@ import greedy
 import enfriamiento_simulado as es
 import exportacion_excel as excel
 
-rnd.seed(125)
+rnd.seed(100)
+# path = ".\\entrada_prueba.json"
 path = ".\\metro_granada.json"
-archivo_resultados = 'es.xlsx'
+archivo_resultados = 'resultados.xlsx'
 glo.init(path)
 
 # Se inicializan los parámetros
-max_iter = 15000
-max_vecinos = len(glo.HORARIO_TRENES) * 10
+max_iter = 50000
+max_vecinos = len(glo.HORARIO_TRENES) * 20
 LRC = 2
 sol_ini = greedy.greedy(LRC)
 
@@ -63,27 +64,27 @@ titulo_grafico = 'Resultados para cada iteración del Enfriamiento Simulado'
 excel.aniade_graficos(titulo_grafico, archivo_resultados, 'es_graficos', False, True)
 
 
-################################
-# GRASP                        #
-################################
-
-# se asignan los valores de los parámetros
-max_iter = 10
-max_iter_bl = 3000
-max_vecinos_bl = 2000
-
-# se ejecuta el GRASP
-solucion, fit = grasp.GRASP(LRC, max_iter, max_iter_bl, max_vecinos_bl)
-
-print('\nGRASP')
-print(solucion)
-print('fit: ' + str(fit))
-
-# se almacena la solución obtenida
-# excel.exportar_solucion(solucion, archivo_resultados, 'grasp_best', False)
-excel.crear_hoja_servicios(solucion, archivo_resultados, 'grasp_horario', False)
-
-# se almacenan el gráfico de progresión del algoritmo
-titulo_grafico = 'Resultados para cada iteración del algoritmo GRASP'
-excel.aniade_graficos(titulo_grafico, archivo_resultados, 'grasp_graficos', False)
+# ################################
+# # GRASP                        #
+# ################################
+#
+# # se asignan los valores de los parámetros
+# max_iter = 10
+# max_iter_bl = 3000
+# max_vecinos_bl = 2000
+#
+# # se ejecuta el GRASP
+# solucion, fit = grasp.GRASP(LRC, max_iter, max_iter_bl, max_vecinos_bl)
+#
+# print('\nGRASP')
+# print(solucion)
+# print('fit: ' + str(fit))
+#
+# # se almacena la solución obtenida
+# # excel.exportar_solucion(solucion, archivo_resultados, 'grasp_best', False)
+# excel.crear_hoja_servicios(solucion, archivo_resultados, 'grasp_horario', False)
+#
+# # se almacenan el gráfico de progresión del algoritmo
+# titulo_grafico = 'Resultados para cada iteración del algoritmo GRASP'
+# excel.aniade_graficos(titulo_grafico, archivo_resultados, 'grasp_graficos', False)
 

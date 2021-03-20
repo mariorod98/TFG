@@ -13,16 +13,25 @@ import globales as glo
 
 # función que genera un vecino modificando el valor de una posición por otro
 def genera_vecino_1(solucion):
-    # generamos una copia de la solución
+    # se genera una copia de la solución
     vecino = solucion.copy()
 
-    # obtenemos una posición aleatoria del vector y su valor
+    # se vacia la lista con los servicios que van a ser modificados
+    glo.MODIFICADOS = []
+
+    # se obtiene una posición aleatoria del vector y su valor
     pos = rnd.randint(0, len(solucion) - 1)
     valor = solucion[pos]
 
-    # obtenemos un valor distinto
+    # se almacena el valor antiguo
+    glo.MODIFICADOS.append(valor)
+
+    # se obtiene un valor distinto
     while valor == solucion[pos]:
         valor = rnd.randint(0, glo.N_SERVICIOS - 1)
+
+    # se almacena el nuevo valor
+    glo.MODIFICADOS.append(valor)
 
     # asignamos el valor al vecino
     vecino[pos] = valor
@@ -71,7 +80,19 @@ def busqueda_local(sol_ini, max_iter, max_vecinos, almacena_resultados=False):
 
     # se calcula la solucion inicial
     sol_act = sol_ini
-    fit_act, resultados_act  = fitness.funcion_objetivo(sol_act)
+    periodos_sol_act = [[] for i in range(0, glo.N_SERVICIOS)]
+    glo.MODIFICADOS = [i for i in range(0, glo.N_SERVICIOS)]
+    fit_act, resultados_act  = fitness.funcion_objetivo(sol_act, periodos_sol_act)
+
+    # print('it: 0')
+    # print(sol_act)
+    # print(periodos_sol_act)
+
+    # si queremos mantener un registro de los resultados obtenidos
+    if almacena_resultados:
+        # se almacena el resultado obtenido
+        glo.RESULTADOS.append([-1, fit_act, resultados_act, sol_act])
+
 
     # bucle principal
     while it < max_iter:
@@ -82,8 +103,13 @@ def busqueda_local(sol_ini, max_iter, max_vecinos, almacena_resultados=False):
         while vecinos_generados < max_vecinos and not vecino_encontrado:
             # se genera una nueva solución vecina
             sol_new = genera_vecino(sol_act)
+            periodos_sol_new = periodos_sol_act.copy()
             # se comprueba que la solución es válida y se obtiene su fitness
-            fit_new, resultados_new = fitness.funcion_objetivo(sol_new)
+            fit_new, resultados_new = fitness.funcion_objetivo(sol_new, periodos_sol_new)
+
+            # print('it: %d' % (it + 1))
+            # print(sol_act)
+            # print(periodos_sol_new)
 
             # si es válida y el fitness es mejor, se reemplaza la solución actual por la nueva
             if fit_new < fit_act:
@@ -91,7 +117,7 @@ def busqueda_local(sol_ini, max_iter, max_vecinos, almacena_resultados=False):
                 sol_act = sol_new
                 fit_act = fit_new
                 resultados_act = resultados_new
-                # print(sol_act)
+                periodos_sol_act = periodos_sol_new
 
                 # si queremos mantener un registro de los resultados obtenidos
                 if almacena_resultados:
@@ -100,13 +126,12 @@ def busqueda_local(sol_ini, max_iter, max_vecinos, almacena_resultados=False):
 
             # se actualiza el número de vecinos generado
             vecinos_generados += 1
+            # se aumenta el número de iteraciones realizadas
+            it += 1
 
         # si se ha llegado al máximo de vecinos generados, se termina la búsqueda local
         if not vecino_encontrado:
             break
-
-        # se aumenta el número de iteraciones realizadas
-        it += 1
 
     # devolvemos la solución obtenida y su fitness
     return sol_act, fit_act, resultados_act
