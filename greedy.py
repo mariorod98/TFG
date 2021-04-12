@@ -28,7 +28,7 @@ def obtiene_candidatos_posibles(posicion, ultimas_paradas, solucion):
     return candidatos
 
 
-def selecciona_candidato(posicion, candidatos, ultimas_paradas, RLC):
+def selecciona_candidato(posicion, candidatos, ultimas_paradas, LRC):
     seleccionado = -1
 
     # minimo = min(ultimas_paradas, key=lambda x: x['TIEMPO'])['TIEMPO']
@@ -42,7 +42,7 @@ def selecciona_candidato(posicion, candidatos, ultimas_paradas, RLC):
         if p in candidatos:
             seleccionados.append(p)
 
-        if len(seleccionados) == RLC: break
+        if len(seleccionados) == LRC: break
 
     if seleccionados:
         tren = glo.HORARIO_TRENES[posicion]['TREN']
@@ -54,8 +54,8 @@ def selecciona_candidato(posicion, candidatos, ultimas_paradas, RLC):
 
     return seleccionado
 
-
-def greedy(RLC):
+#   LRC: Lista restringida de candidatos
+def greedy(LRC):
     # inicializamos la solución a vacio
     solucion = np.full([len(glo.HORARIO_TRENES)], -1)
 
@@ -74,7 +74,7 @@ def greedy(RLC):
     while i < len(paradas_ordenadas):
         pos = paradas_ordenadas[i]
         candidatos = obtiene_candidatos_posibles(pos, ultimas_paradas, solucion)
-        seleccionado = selecciona_candidato(pos, candidatos, ultimas_paradas, RLC)
+        seleccionado = selecciona_candidato(pos, candidatos, ultimas_paradas, LRC)
 
         if seleccionado != -1:
             solucion[pos] = seleccionado

@@ -6,7 +6,7 @@ Autor: Mario Rodríguez Chaves
 
 import globales as glo
 import busqueda_local as bl
-import greedy
+from greedy import greedy
 
 
 # función GRASP
@@ -22,7 +22,7 @@ def GRASP(LRC, max_iter, max_iter_bl, max_vecinos_bl):
     # para cada iteración
     while it < max_iter:
         # se genera una solución inicial a partir del greedy
-        sol_ini = greedy.greedy(LRC)
+        sol_ini = greedy(LRC)
         # se aplica una búsqueda local a la solución generada
         sol_act, fit_act, resultados = bl.busqueda_local(sol_ini, max_iter_bl, max_vecinos_bl)
 

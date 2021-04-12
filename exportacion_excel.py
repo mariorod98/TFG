@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Funciones para crear un archivo xls
+Funciones para crear un glo.ARCHIVO_SALIDA xls
 Autor: Mario Rodríguez Chaves
 """
 
@@ -22,14 +22,14 @@ letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 # Función que abre un workbook de excel
 # Parámetros de entrada:
-#   archivo: path del archivo xls a abrir
+#   glo.ARCHIVO_SALIDA: path del glo.ARCHIVO_SALIDA xls a abrir
 #   titulo: nombre de la worksheet
-#   sobreescribir: booleano que indica si se quiere sobreescribir el contenido del archivo
-# Return: objeto workbook con el archivo cargado
-def abre_workbook(archivo, titulo, sobreescribir):
-    # si el archivo existe y no se quiere sobreescribir, carga contenido del archivo
-    if os.path.isfile(archivo) and not sobreescribir:
-        wb = load_workbook(archivo)
+#   sobreescribir: booleano que indica si se quiere sobreescribir el contenido del glo.ARCHIVO_SALIDA
+# Return: objeto workbook con el glo.ARCHIVO_SALIDA cargado
+def abre_workbook(titulo, sobreescribir):
+    # si el glo.ARCHIVO_SALIDA existe y no se quiere sobreescribir, carga contenido del glo.ARCHIVO_SALIDA
+    if os.path.isfile(glo.ARCHIVO_SALIDA) and not sobreescribir:
+        wb = load_workbook(glo.ARCHIVO_SALIDA)
     else:  # en otro caso, se crea un workbook nuevo y se elimina la sheet por defecto
         wb = Workbook()
         wb.remove(wb.active)
@@ -53,12 +53,12 @@ def calcula_posicion(fila, columna):
 # Función que dibuja la configuración de la solución en una sheet del workbook
 # Parámetros de entrada:
 #   solucion: nparray con los valores a representar
-#   archivo: path del archivo xls a abrir
+#   glo.ARCHIVO_SALIDA: path del glo.ARCHIVO_SALIDA xls a abrir
 #   titulo: nombre de la worksheet
-#   sobreescribir: booleano que indica si se quiere sobreescribir el contenido del archivo
-def exportar_solucion(solucion, archivo, titulo, sobreescribir):
+#   sobreescribir: booleano que indica si se quiere sobreescribir el contenido del glo.ARCHIVO_SALIDA
+def exportar_solucion(solucion, titulo, sobreescribir):
     # se abre el workbook y se escoge la última página
-    wb = abre_workbook(archivo, titulo, sobreescribir)
+    wb = abre_workbook(titulo, sobreescribir)
     ws = wb.worksheets[-1]
 
     # se inicializan las posiciones
@@ -88,7 +88,7 @@ def exportar_solucion(solucion, archivo, titulo, sobreescribir):
         i += 1
 
     # se guarda el workbook
-    wb.save(archivo)
+    wb.save(glo.ARCHIVO_SALIDA)
 
 
 def crea_grafico(valores, titulo, y_axis, x_axis):
@@ -108,12 +108,12 @@ def crea_grafico(valores, titulo, y_axis, x_axis):
 # la media de tiempos de trabajo y la media de tiempos de descanso
 # Parámetros de entrada:
 #   titulo_grafico: título de los gráficos
-#   archivo: path del archivo xls a abrir
+#   glo.ARCHIVO_SALIDA: path del glo.ARCHIVO_SALIDA xls a abrir
 #   titulo: nombre de la worksheet
-#   sobreescribir: booleano que indica si se quiere sobreescribir el contenido del archivo
-def aniade_graficos(titulo_grafico, archivo, titulo, sobreescribir, es=False):
+#   sobreescribir: booleano que indica si se quiere sobreescribir el contenido del glo.ARCHIVO_SALIDA
+def aniade_graficos(titulo_grafico, titulo, sobreescribir, es=False):
     # se abre el workbook y se escoge la última página
-    wb = abre_workbook(archivo, titulo, sobreescribir)
+    wb = abre_workbook(titulo, sobreescribir)
     ws = wb.worksheets[-1]
 
     # se obtiene una lista con los números de iteración
@@ -206,7 +206,7 @@ def aniade_graficos(titulo_grafico, archivo, titulo, sobreescribir, es=False):
         ws.add_chart(chart, "V16")
 
     # se guarda el workbook
-    wb.save(archivo)
+    wb.save(glo.ARCHIVO_SALIDA)
 
 
 # Función que transforma un tiempo en minutos en hora y minutos
@@ -234,12 +234,12 @@ def busca_hora(t_act, tiempos):
 # Función que crea el horario de una solución dada
 # Parámetros de entrada:
 #   solucion: nparray con los valores a representar
-#   archivo: path del archivo xls a abrir
+#   glo.ARCHIVO_SALIDA: path del glo.ARCHIVO_SALIDA xls a abrir
 #   titulo: nombre de la worksheet
-#   sobreescribir: booleano que indica si se quiere sobreescribir el contenido del archivo
-def crear_hoja_servicios(solucion, archivo, titulo, sobreescribir):
+#   sobreescribir: booleano que indica si se quiere sobreescribir el contenido del glo.ARCHIVO_SALIDA
+def crear_hoja_servicios(solucion, titulo, sobreescribir):
     # se abre el workbook y se escoge la última página
-    wb = abre_workbook(archivo, titulo, sobreescribir)
+    wb = abre_workbook(titulo, sobreescribir)
     ws = wb.worksheets[-1]
 
     # se crean las listas de tiempos en minutos y en formato hh:mm
@@ -251,7 +251,7 @@ def crear_hoja_servicios(solucion, archivo, titulo, sobreescribir):
         horas.append(min_to_hora(t))
         horas.append('')
 
-    # se modifica el tamaño de las columnas del archivo excel
+    # se modifica el tamaño de las columnas del glo.ARCHIVO_SALIDA excel
     for col in range(1, len(horas) + 2):
         ws.column_dimensions[get_column_letter(col)].width = 6
 
@@ -293,7 +293,7 @@ def crear_hoja_servicios(solucion, archivo, titulo, sobreescribir):
                 ws.cell(fila, pos_ini).fill = PatternFill(fill_type='solid',
                                                           start_color=colores[tren],
                                                           end_color=colores[tren])
-            else: # si son de distintas franjas de tiempo
+            else:  # si son de distintas franjas de tiempo
                 # se pone en la casilla de inicio del periodo el tren y la fecha de inicio
                 ws.cell(fila, pos_ini + 1, 'tren ' + str(tren) + ' ' + min_to_hora(t_ini))
                 # se pone en la casilla de fin del periodo el tren y la fecha de fin
@@ -306,4 +306,4 @@ def crear_hoja_servicios(solucion, archivo, titulo, sobreescribir):
                                                         end_color=colores[tren])
 
     # se guarda el workbook
-    wb.save(archivo)
+    wb.save(glo.ARCHIVO_SALIDA)

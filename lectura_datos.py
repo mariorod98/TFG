@@ -17,7 +17,9 @@ def lee_entrada(archivo):
     with open(archivo, 'r') as json_file:
         datos = json.load(json_file)
 
-    return datos
+    glo.ARCHIVO_ENTRADA = archivo
+    exito = glo.init(datos)
+    return exito
 
 
 # función que calcula los tramos entre paradas y el tiempo que se tarda en recorrer cada tramo
