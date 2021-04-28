@@ -15,7 +15,11 @@ def sort_func(dic):
 def lee_entrada(archivo):
     # se abre el archivo que contiene el json
     with open(archivo, 'r') as json_file:
-        datos = json.load(json_file)
+        try:
+            datos = json.load(json_file)
+        except:
+            print("Error al descodificar el archivo json")
+            return False
 
     glo.ARCHIVO_ENTRADA = archivo
     exito = glo.init(datos)

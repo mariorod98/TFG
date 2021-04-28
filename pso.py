@@ -22,9 +22,9 @@ def obtiene_vecindario(poblacion, id_particula, tam_vecindario):
     # se calculan los vecinos que tiene la partícula a su izquierda
     izq = id_particula % tam_vecindario
     # se calculan los vecinos que tiene la partícula a su derecha
-    dcha = min(id_particula + (tam_vecindario - izq - 1), len(poblacion))
+    dcha = min(id_particula + (tam_vecindario - izq - 1) + 1, len(poblacion))
     # se obtiene el vecindario de la partícula, incluida esta misma
-    vecindario = [poblacion[p] for p in range(id_particula - izq, dcha + 1)]
+    vecindario = [poblacion[p] for p in range(id_particula - izq, dcha)]
 
     # se devuelve el vecindario obtenido
     return vecindario
@@ -151,6 +151,10 @@ def pso(tam_pob, tam_vec, max_vel, max_it, LRC):
             best_vecino = encuentra_mejor_vecindario(pob_actual, p, tam_vec)
             # se calcula su nueva velocidad
             calcula_velocidad(particula, best_vecino)
+
+            print("it: " + str(it))
+            print("X: " + str(particula['X']))
+            print("V: " + str(particula['V']))
             # se desplaza la partícula
             desplaza_particula(particula)
 

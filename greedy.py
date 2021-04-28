@@ -54,6 +54,7 @@ def selecciona_candidato(posicion, candidatos, ultimas_paradas, LRC):
 
     return seleccionado
 
+
 #   LRC: Lista restringida de candidatos
 def greedy(LRC):
     # inicializamos la solución a vacio
