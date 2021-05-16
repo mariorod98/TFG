@@ -17,7 +17,7 @@ import globales as glo
 #   n_periodos: número de periodos de trabajo totales
 #   resultados['T_TRABAJO']: lista con los tiempos de trabajo de los servicios
 #   resultados['T_DESCANSO']: lista con los tiempos de descanso de los servicios
-def calcula_resultados(solucion, periodos_sol):
+def calcula_resultados(solucion, periodos_sol, modificados):
     resultados = {'T_TRABAJO': np.empty(glo.N_SERVICIOS),   # lista con los tiempos de trabajo por servicio
                   'T_DESCANSO': np.empty(glo.N_SERVICIOS),  # lista con los tiempos de descanso por servicio
                   'N_PERIODOS': np.zeros(glo.N_SERVICIOS),  # número de periodos de trabajo por servicio
@@ -27,7 +27,7 @@ def calcula_resultados(solucion, periodos_sol):
     for servicio in range(0, glo.N_SERVICIOS):
 
         # si el horario del servicio ha sido modificado
-        if servicio in glo.MODIFICADOS:
+        if servicio in modificados:
 
             # se vuelve a calcular los periodos del servicio
             periodos = aux.calcula_periodos_servicio(solucion, servicio)
@@ -57,15 +57,20 @@ def calcula_resultados(solucion, periodos_sol):
         # se almacena el número de periodos
         resultados['N_PERIODOS'][servicio] = len(periodos)
 
-        # se calculan los tiempos de trabajo y descanso y se almacenan
-        t_trabajo, t_descanso = aux.calcula_tiempos_servicio(periodos_comprimidos)
-        resultados['T_TRABAJO'][servicio] = t_trabajo
-        resultados['T_DESCANSO'][servicio] = t_descanso
+        if len(periodos) > 0:
+            # se calculan los tiempos de trabajo y descanso y se almacenan
+            t_trabajo, t_descanso = aux.calcula_tiempos_servicio(periodos_comprimidos)
+            resultados['T_TRABAJO'][servicio] = t_trabajo
+            resultados['T_DESCANSO'][servicio] = t_descanso
 
-        # se obtienen el tiempo inicial y final de jornada y se calcula el tiempo de jornada
-        t_ini = glo.HORARIO_TRENES[periodos[0][0]]['TIEMPO']
-        t_fin = glo.HORARIO_TRENES[periodos[-1][1]]['TIEMPO']
-        resultados['T_JORNADA'][servicio] = t_fin - t_ini
+            # se obtienen el tiempo inicial y final de jornada y se calcula el tiempo de jornada
+            t_ini = glo.HORARIO_TRENES[periodos[0][0]]['TIEMPO']
+            t_fin = glo.HORARIO_TRENES[periodos[-1][1]]['TIEMPO']
+            resultados['T_JORNADA'][servicio] = t_fin - t_ini
+        else:
+            resultados['T_TRABAJO'][servicio] = 0
+            resultados['T_DESCANSO'][servicio] = 0
+            resultados['T_JORNADA'][servicio] = 0
 
     # se devuelven los resultados obtenidos
     return True, resultados
@@ -191,7 +196,7 @@ def funcion_objetivo_3(solucion, periodos_sol):
 # Return:
 #   fitness: valor fitness de la función
 #   resultados: métricas de la solución
-def funcion_objetivo_4(solucion, periodos_sol):
+def funcion_objetivo_4(solucion, periodos_sol, modificados):
     optimo_trabajo = glo.T_OPTIMO_TRABAJO
     optimo_descanso = glo.T_OPTIMO_DESCANSO
 
@@ -199,7 +204,7 @@ def funcion_objetivo_4(solucion, periodos_sol):
     peso2 = 0.2
 
     # se obtienen los tiempos de trabajo y descanso de cada servicio
-    es_valida, resultados = calcula_resultados(solucion, periodos_sol)
+    es_valida, resultados = calcula_resultados(solucion, periodos_sol, modificados)
 
     # si la solución no es válida, se devuelve una fitness mala
     if not es_valida:

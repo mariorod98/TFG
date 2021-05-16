@@ -12,28 +12,28 @@ if __name__ == '__main__':
     import grasp
     from greedy import greedy
     from pso import pso
+    from bco import bco
     import enfriamiento_simulado as es
     import exportacion_excel as excel
     import lectura_datos
 
     rnd.seed(100)
-    path = ".\\entrada_prueba.json"
-    # path = ".\\metro_granada.json"
-    archivo_resultados = 'resultados.xlsx'
+    # path = ".\\entrada_prueba.json"
+    path = ".\\metro_granada.json"
+    glo.ARCHIVO_SALIDA = 'resultados.xlsx'
     exito_lectura = lectura_datos.lee_entrada(path)
 
     assert exito_lectura, 'Lectura de datos incorrecta'
 
     # Se inicializan los parámetros
-    max_iter = 50000
-    max_vecinos = len(glo.HORARIO_TRENES) * 20
     LRC = 2
     sol_ini = greedy(LRC)
-    #
-    # ################################
-    # # BUSQUEDA LOCAL               #
-    # ################################
-    #
+
+    ################################
+    # BUSQUEDA LOCAL               #
+    ################################
+    # max_iter = 50000
+    # max_vecinos = len(glo.HORARIO_TRENES) * 20
     # # se ejecuta la búsqueda local
     # solucion, fit, resultados = bl.busqueda_local(sol_ini, max_iter, max_vecinos, True)
     #
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     # # se almacenan el gráfico de progresión del algoritmo
     # titulo_grafico = 'Resultados para cada iteración de la Búsqueda Local'
     # excel.aniade_graficos(titulo_grafico, 'bl_graficos', False)
-    #
+
     # ################################
     # # ENFRIAMIENTO SIMULADO        #
     # ################################
@@ -94,23 +94,47 @@ if __name__ == '__main__':
     # excel.aniade_graficos(titulo_grafico, 'grasp_graficos', False)
 
 
-    ################################
-    # PSO                          #
-    ################################
-    tam_pob = 100
-    tam_vec = 5
-    max_vel = 1
-    max_it = 100
-    solucion, fit = pso(tam_pob, tam_vec, max_vel, max_it, LRC)
+    # ################################
+    # # PSO                          #
+    # ################################
+    # tam_pob = 1
+    # tam_vec = 5
+    # max_vel = 2
+    #
+    # max_iter = 500
+    # solucion, fit = pso(tam_pob, tam_vec, max_vel, max_iter, LRC)
+    #
+    # print('PSO')
+    # print(solucion)
+    # print('fit: ' + str(fit))
+    #
+    # # se almacena la solución obtenida
+    # # excel.exportar_solucion(solucion, 'pso_best', False)
+    # excel.crear_hoja_servicios(solucion, 'pso_horario', True)
+    #
+    # # se almacenan el gráfico de progresión del algoritmo
+    # titulo_grafico = 'Resultados para cada iteración del algoritmo PSO'
+    # excel.aniade_graficos(titulo_grafico, 'pso_graficos', False)
 
-    print('PSO')
-    print(solucion)
-    print('fit: ' + str(fit))
+    ################################
+    # BCO                          #
+    ################################
+    max_iter = 1
+    n_abejas = 100
+
+    solucion, fit = bco(n_abejas, max_iter)
+    sol_bl, fit_bl, res_bl = bl.busqueda_local(solucion, 10000, 100)
+
+    print('BCO')
+    print(sol_bl)
+    print('fit: ' + str(fit_bl))
+
+    glo.RESULTADOS.append([max_iter, fit_bl, res_bl, sol_bl])
 
     # se almacena la solución obtenida
-    # excel.exportar_solucion(solucion, 'grasp_best', False)
-    excel.crear_hoja_servicios(solucion, 'pso_horario', True)
+    # excel.exportar_solucion(solucion, 'bco_best', False)
+    excel.crear_hoja_servicios(solucion, 'bco_horario', False)
 
     # se almacenan el gráfico de progresión del algoritmo
-    titulo_grafico = 'Resultados para cada iteración del algoritmo GRASP'
-    excel.aniade_graficos(titulo_grafico, 'pso_graficos', False)
+    titulo_grafico = 'Resultados para cada iteración del algoritmo BCO'
+    excel.aniade_graficos(titulo_grafico, 'bco_graficos', False)

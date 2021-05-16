@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Funciones del algoritmo de Enfriamiento Simulado
+Funciones del algoritmo de Particle Swarm Optimization
 Autor: Mario Rodríguez Chaves
 """
 from random import uniform, randrange, random
@@ -120,7 +120,7 @@ def pso(tam_pob, tam_vec, max_vel, max_it, LRC):
     # mientras no se llegue al máximo de iteraciones
     while it < max_it:
         # primero se calculan los fitness obtenidos
-        #para cada partícula
+        # para cada partícula
         for particula in pob_actual:
             # se evalua la función objetivo
             particula['periodos'] = [[] for i in range(0, glo.N_SERVICIOS)]

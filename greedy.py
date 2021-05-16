@@ -11,34 +11,46 @@ import funciones_auxiliares as aux
 import globales as glo
 
 
-# devuelve el elemento más prometedor entre los candidatos
+# genera una lista con todos los candidatos FACTIBLES
 def obtiene_candidatos_posibles(posicion, ultimas_paradas, solucion):
     # se inicializa el array de candidatos
     candidatos = []
 
+    # para cada posible candidato
     for c in range(0, glo.N_SERVICIOS):
+        # se genera una copia de la solución actual
         sol_new = solucion.copy()
+        # se añade el candidato a la solución
         sol_new[posicion] = c
+        # se comprueba si la solución es válida
         periodos = aux.calcula_periodos_servicio(sol_new, c)
         periodos_comprimidos = aux.comprime_periodos(periodos)
         es_valido = aux.valida_servicio(periodos, periodos_comprimidos)
+        # si es válida, se añade el candidato a la lista
         if es_valido:
             candidatos.append(c)
 
+    # se devuelve la lista con todos los candidatos factibles
     return candidatos
 
 
+# Función que genera la LRC y selecciona un candidato de la lista de candidatos
 def selecciona_candidato(posicion, candidatos, ultimas_paradas, LRC):
     seleccionado = -1
 
     # minimo = min(ultimas_paradas, key=lambda x: x['TIEMPO'])['TIEMPO']
     # seleccionados = [c for c in candidatos if ultimas_paradas[c]['TIEMPO'] == minimo]
 
+    # se ordenan las tuplas de paradas segun la hora de llegada
     paradas_ordenadas  = [x for x in range(0, len(ultimas_paradas), 1)]
     paradas_ordenadas.sort(key=lambda x: ultimas_paradas[x]['TIEMPO'])
 
+    # se inicializa la lista de candidatos
     seleccionados = []
+
+    # para cada parada en orden temporal
     for p in paradas_ordenadas:
+        # si la parada está en las candidatas
         if p in candidatos:
             seleccionados.append(p)
 

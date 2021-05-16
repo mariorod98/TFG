@@ -17,51 +17,27 @@ def genera_vecino_1(solucion):
     vecino = solucion.copy()
 
     # se vacia la lista con los servicios que van a ser modificados
-    glo.MODIFICADOS = []
+    modificados = []
 
     # se obtiene una posición aleatoria del vector y su valor
     pos = rnd.randint(0, len(solucion) - 1)
     valor = solucion[pos]
 
     # se almacena el valor antiguo
-    glo.MODIFICADOS.append(valor)
+    modificados.append(valor)
 
     # se obtiene un valor distinto
     while valor == solucion[pos]:
         valor = rnd.randint(0, glo.N_SERVICIOS - 1)
 
     # se almacena el nuevo valor
-    glo.MODIFICADOS.append(valor)
+    modificados.append(valor)
 
     # asignamos el valor al vecino
     vecino[pos] = valor
 
-    # # si la posición escogida es la primera parada del metro, entonces hay que asignar también la segunda parada
-    # # si la posición escogida es la segunda parada del metro, entonces hay que asignar también la primera parada
-    # if pos == 0:
-    #     # asignamos el valor al vecino
-    #     vecino[pos] = valor
-    #     vecino[pos + 1] = valor
-    # elif pos == 1:
-    #     # asignamos el valor al vecino
-    #     vecino[pos] = valor
-    #     vecino[pos - 1] = valor
-    # else:
-    #     tren_pos_act = glo.HORARIO_TRENES[pos]['TREN']
-    #     tren_pos_1   = glo.HORARIO_TRENES[pos - 1]['TREN']
-    #     tren_pos_2   = glo.HORARIO_TRENES[pos - 1]['TREN']
-    #
-    #     if tren_pos_act != tren_pos_1:
-    #         # asignamos el valor al vecino
-    #         vecino[pos] = valor
-    #         vecino[pos + 1] = valor
-    #     elif tren_pos_act == tren_pos_1 and tren_pos_act != tren_pos_2:
-    #         # asignamos el valor al vecino
-    #         vecino[pos] = valor
-    #         vecino[pos - 1] = valor
-
     # devolvemos el vecino generado
-    return vecino
+    return vecino, modificados
 
 
 # fijamos la función de generación de vecinos que queremos usar
@@ -81,8 +57,8 @@ def busqueda_local(sol_ini, max_iter, max_vecinos, almacena_resultados=False):
     # se calcula la solucion inicial
     sol_act = sol_ini
     periodos_sol_act = [[] for i in range(0, glo.N_SERVICIOS)]
-    glo.MODIFICADOS = [i for i in range(0, glo.N_SERVICIOS)]
-    fit_act, resultados_act  = fitness.funcion_objetivo(sol_act, periodos_sol_act)
+    modificados = [i for i in range(0, glo.N_SERVICIOS)]
+    fit_act, resultados_act  = fitness.funcion_objetivo(sol_act, periodos_sol_act, modificados)
 
     # print('it: 0')
     # print(sol_act)
@@ -102,10 +78,10 @@ def busqueda_local(sol_ini, max_iter, max_vecinos, almacena_resultados=False):
         # se generan vecinos hasta que se encuentre uno mejor o se llegue al máximo de vecinos generados
         while vecinos_generados < max_vecinos and not vecino_encontrado:
             # se genera una nueva solución vecina
-            sol_new = genera_vecino(sol_act)
+            sol_new, modificados = genera_vecino(sol_act)
             periodos_sol_new = periodos_sol_act.copy()
             # se comprueba que la solución es válida y se obtiene su fitness
-            fit_new, resultados_new = fitness.funcion_objetivo(sol_new, periodos_sol_new)
+            fit_new, resultados_new = fitness.funcion_objetivo(sol_new, periodos_sol_new, modificados)
 
             # print('it: %d' % (it + 1))
             # print(sol_act)
