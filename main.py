@@ -32,11 +32,11 @@ if __name__ == '__main__':
     ################################
     # BUSQUEDA LOCAL               #
     ################################
-    # max_iter = 50000
-    # max_vecinos = len(glo.HORARIO_TRENES) * 20
-    # # se ejecuta la búsqueda local
-    # solucion, fit, resultados = bl.busqueda_local(sol_ini, max_iter, max_vecinos, True)
-    #
+    max_iter = 50000
+    max_vecinos = len(glo.HORARIO_TRENES) * 20
+    # se ejecuta la búsqueda local
+    solucion, fit, resultados = bl.busqueda_local(sol_ini, max_iter, max_vecinos, True)
+
     # print('BUSQUEDA LOCAL')
     # print(solucion)
     # print('fit: ' + str(fit))
@@ -119,22 +119,29 @@ if __name__ == '__main__':
     ################################
     # BCO                          #
     ################################
-    max_iter = 1
+    max_iter = 5
     n_abejas = 100
 
-    solucion, fit = bco(n_abejas, max_iter)
-    sol_bl, fit_bl, res_bl = bl.busqueda_local(solucion, 10000, 100)
+    soluciones = []
+    # solucion, fit = bco(n_abejas, max_iter)
 
-    print('BCO')
-    print(sol_bl)
-    print('fit: ' + str(fit_bl))
+    for max_iter in (1, 5, 10, 15, 20):
+        for n_abejas in (10, 20, 50, 100):
+            print("max_iter: " + str(max_iter))
+            print("n_abejas: " + str(n_abejas))
+            solucion, fit = bco(n_abejas, max_iter)
+            soluciones.append([solucion, fit])
 
-    glo.RESULTADOS.append([max_iter, fit_bl, res_bl, sol_bl])
-
-    # se almacena la solución obtenida
-    # excel.exportar_solucion(solucion, 'bco_best', False)
-    excel.crear_hoja_servicios(solucion, 'bco_horario', False)
-
-    # se almacenan el gráfico de progresión del algoritmo
-    titulo_grafico = 'Resultados para cada iteración del algoritmo BCO'
-    excel.aniade_graficos(titulo_grafico, 'bco_graficos', False)
+    # print('BCO')
+    # print(sol_bl)
+    # print('fit: ' + str(fit_bl))
+    #
+    # glo.RESULTADOS.append([max_iter, fit_bl, res_bl, sol_bl])
+    #
+    # # se almacena la solución obtenida
+    # # excel.exportar_solucion(solucion, 'bco_best', False)
+    # excel.crear_hoja_servicios(solucion, 'bco_horario', False)
+    #
+    # # se almacenan el gráfico de progresión del algoritmo
+    # titulo_grafico = 'Resultados para cada iteración del algoritmo BCO'
+    # excel.aniade_graficos(titulo_grafico, 'bco_graficos', False)

@@ -18,7 +18,7 @@ DIR_SALIDA = 0          # dirección de salida de los trenes
 DIR_ALTERNA = False     # especifica si los trenes alternan la dirección al salir o salen de la misma dirección
 P_CAMBIO = []           # paradas habilitadas para el cambio entre conductores
 N_SERVICIOS = 0         # número de servicios de la jornada
-T_MIN_DESCANSOS = 0     # tiempo mínimo entre dos periodos para que se considere un descanso
+T_MIN_DESCANSO = 0     # tiempo mínimo entre dos periodos para que se considere un descanso
 T_MAX_TRABAJO = 0       # tiempo máximo de trabajo continuo en un servicio
 T_OPTIMO_TRABAJO = 0    # tiempo deseado de trabajo por servicio
 T_OPTIMO_DESCANSO = 0   # tiempo deseado de descanso por servicio
@@ -45,7 +45,7 @@ def init(datos):
     global DIR_ALTERNA
     global P_CAMBIO
     global N_SERVICIOS
-    global T_MIN_DESCANSOS
+    global T_MIN_DESCANSO
     global T_MAX_TRABAJO
     global HORARIO_TRENES
     global T_OPTIMO_DESCANSO
@@ -149,10 +149,10 @@ def init(datos):
     else:
         return False
 
-    # se comprueba que exista la entrada T_MIN_DESCANSOS y que sea int
-    datos_correctos = 'T_MIN_DESCANSOS' in datos.keys() and type(datos['T_MIN_DESCANSOS']) is int
+    # se comprueba que exista la entrada T_MIN_DESCANSO y que sea int
+    datos_correctos = 'T_MIN_DESCANSO' in datos.keys() and type(datos['T_MIN_DESCANSO']) is int
     if datos_correctos:
-        T_MIN_DESCANSOS = datos['T_MIN_DESCANSOS']
+        T_MIN_DESCANSO = datos['T_MIN_DESCANSO']
     else:
         return False
 

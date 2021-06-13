@@ -79,7 +79,7 @@ def comprime_periodos(periodos):
 
             # si la diferencia de tiempos entre el periodo actual es un descanso, se añade
             # el periodo actual a la lista de periodos
-            if diferencia_tiempos >= glo.T_MIN_DESCANSOS:
+            if diferencia_tiempos >= glo.T_MIN_DESCANSO:
                 periodos_comprimidos.append(periodo)
             else:  # si no hay tiempo para un descanso
                 # se combina el periodo actual con el anterior para formar un mismo periodo

@@ -44,14 +44,26 @@ def genera_soluciones(sol_parciales, etapa):
 
         # para cada candidato
         for c in candidatos:
-            # se crea una copia de la solución parcial actual
-            sol_new = deepcopy(sol)
+            sol_new = {}
+            sol_new['solucion'] = sol['solucion'].copy()
             # se añade el valor escogido a la posición de la etapa actual
             sol_new['solucion'][etapa] = c
             # se reinicia el número de abejas
             sol_new['abejas'] = 1
+            sol_new['periodos'] = sol['periodos'].copy()
+            sol_new['fit'] = 0
+
             # se añade la solución parcial a la lista de nuevas soluciones
             sol_parciales_new.append(sol_new)
+
+            # # se crea una copia de la solución parcial actual
+            # sol_new = deepcopy(sol)
+            # # se añade el valor escogido a la posición de la etapa actual
+            # sol_new['solucion'][etapa] = c
+            # # se reinicia el número de abejas
+            # sol_new['abejas'] = 1
+            # # se añade la solución parcial a la lista de nuevas soluciones
+            # sol_parciales_new.append(sol_new)
 
     # se devuelve la lista generada
     return sol_parciales_new
@@ -64,6 +76,8 @@ def bco(n_abejas, n_iteraciones):
     media = 0
     n_etapas = 0
 
+    best_sol = []
+    best_periodos = []
     best_fit = float('inf')
     # worst_sol = {'fit': -1}
 
@@ -117,30 +131,35 @@ def bco(n_abejas, n_iteraciones):
             media += abejas_libres / tamanio_ant
             n_etapas += 1
 
-            print("etapa: " + str(etapa))
-            print("media local: " + str(abejas_libres / tamanio_ant))
-            print("media global: " + str(media/n_etapas))
-            print("\n")
+            # print("etapa: " + str(etapa))
+            # print("media local: " + str(abejas_libres / tamanio_ant))
+            # print("media global: " + str(media/n_etapas))
+            # print("\n")
+
+            # print(len(sol_parciales))
+
+            if len(sol_parciales) == 0:
+                # print("Sin soluciones parciales posibles")
+                break
 
             # se asignan las abejas libres a las soluciones restantes
             for i in range(abejas_libres):
                 pos = randint(0, len(sol_parciales) - 1)
                 sol_parciales[pos]['abejas'] += 1
 
-        for sol in sol_parciales:
-            if sol['fit'] < best_fit:
-                best_sol = sol['solucion']
-                best_fit = sol['fit']
-                best_periodos = sol['periodos']
+        if len(sol_parciales) > 0:
+            for sol in sol_parciales:
+                if sol['fit'] < best_fit:
+                    best_sol = sol['solucion']
+                    best_fit = sol['fit']
+                    best_periodos = sol['periodos']
 
-            # if sol['fit'] > worst_sol['fit']:
-            #     worst_sol = deepcopy(sol)
+                # if sol['fit'] > worst_sol['fit']:
+                #     worst_sol = deepcopy(sol)
 
-
-
-        fit, resultados = funcion_objetivo(best_sol, best_periodos, [])
-        glo.RESULTADOS.append([it, fit, resultados, best_sol])
-        it += 1
-        print(it)
+            fit, resultados = funcion_objetivo(best_sol, best_periodos, [])
+            glo.RESULTADOS.append([it, fit, resultados, best_sol])
+            it += 1
+            print("it " + str(it) + ": " + str(fit))
     
     return best_sol, best_fit
